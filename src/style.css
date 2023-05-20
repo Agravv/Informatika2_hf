@@ -1,0 +1,334 @@
+* {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: var(--text-color);
+    border: none;
+}
+
+.bg-image {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    background-attachment: fixed;
+}
+
+footer {
+    font-style: oblique;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 3px;
+    background-color: var(--background-default);
+}
+
+footer p {
+    margin-bottom: 0.3em;
+    margin-top: 0.3em;
+}
+
+.btn-container {
+    display: flex;
+    font-size: var(--default-font-size);
+    width: 500px;
+    background-color: var(--background-default);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.button {
+    background: var(--background-button);
+    font-size: var(--default-font-size);
+    text-align: center;
+    transition: all 0.3s ease 0s;
+    width: 100%;
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    height: 35px;
+}
+
+.button a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.button:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.delete-button {
+    color: var(--delete-color);
+}
+
+.nav-item,
+.dropdown {
+    margin-bottom: 0;
+}
+
+.msg {
+    background-color: var(--background-contrast);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    width: 500px;
+    margin: 20px auto 20px auto;
+    /* top-right-bottom-left */
+}
+
+.form-select {
+    margin: 8px 0px;
+    border-radius: var(--border-radius);
+    background-color: var(--color-form-input);
+}
+
+.form-check-input {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+}
+
+.form-check input {
+    margin-top: 0px !important;
+}
+
+/* /Bootstrap */
+
+/* Table */
+
+.table {
+    margin-bottom: 0
+}
+
+.table-search {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    justify-content: space-evenly;
+}
+
+.table-search td {
+    padding: 2px;
+}
+
+.table-search td:nth-child(even) {
+    padding-right: 15px;
+}
+
+.table-container {
+    display: flex;
+    padding: 0px 30px 30px 30px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    min-width: 1170px;
+    background-color: var(--background-default);
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+}
+
+.table-container caption {
+    caption-side: top;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.table-container h4 {
+    line-height: normal;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.user-table {
+    background-color: var(--background-contrast);
+    width: 100%;
+}
+
+.user-table th {
+    background-color: var(--background-table-th);
+    text-align: center;
+    padding: 10px;
+}
+
+.user-table td {
+    text-align: center;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+/* /Table */
+
+/* front page */
+
+html,
+body {
+    line-height: 1.5;
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 36px;
+    text-align: center;
+    font-weight: bold;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.description {
+    background-color: var(--background-contrast);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    text-align: center;
+    margin-inline: 10%;
+}
+
+.description h1 {
+    margin-bottom: 40px;
+}
+
+.info-box {
+    width: calc(33.33% - 20px);
+    background-color: var(--background-contrast);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: var(--border-radius);
+}
+
+.info-box h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-style: oblique;
+}
+
+ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+/* / front page */
+
+/* Profile */
+
+.form-container-profile {
+    display: grid !important;
+    min-height: 0vh !important;
+    align-items: start !important;
+    margin-top: 20px;
+}
+
+.form-container-profile h1 {
+    text-align: center;
+    text-transform: uppercase;
+    background-color: var(--background-default);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* /Profile */
+
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container form {
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    background: var(--background-default);
+    text-align: center;
+    width: 500px;
+    /* margin-bottom: 20px; */
+}
+
+.form-container label {
+    display: flex;
+}
+
+.form-container form h3 {
+    font-size: 30px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.form-container form input {
+    width: 100%;
+    height: 35px;
+    padding: 10px 15px;
+    font-size: 17px;
+    margin: 8px 0;
+    background: var(--color-form-input);
+    border-radius: var(--border-radius);
+}
+
+.form-container form .form-btn {
+    background: var(--background-button);
+    font-size: var(--default-font-size);
+    cursor: pointer;
+    text-align: center;
+    padding: 0 !important;
+    transition: all 0.3s ease 0s;
+}
+
+.form-container form .form-btn:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.form-container form p {
+    margin-top: 10px;
+    font-size: var(--default-font-size);
+    color: var(--text-color);
+}
+
+.form-container form .message {
+    margin: 10px 0;
+    display: block;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+}
+
+.form-container form .error {
+    background: #DC143C;
+    color: #fff;
+}
+
+.form-container form .regex-error {
+    background: rgb(255, 180, 0) !important;
+    color: #333;
+}
+
+.form-container form .success {
+    background: rgb(80, 160, 64) !important;
+    color: #333;
+}

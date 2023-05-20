@@ -1,0 +1,29 @@
+:root {
+    --text-color: #fff;
+    --background-default: #2b3035;
+    --background-table-th: #1d1d1d;
+    --background-contrast: #1a1d1f;
+    --color-form-input: #2b3035;
+    --border-color: #333333;
+    --background-button: #293ba1;
+    --default-font-size: 20px;
+    --delete-color: #c30101;
+    --border-radius: 10px;
+}
+
+.bg-image {
+    background-image: url('../assets/bg-op50-greyscale.PNG');
+}
+
+/* Bootstrap */
+
+.btn-dark {
+    --bs-btn-bg: var(--text-color);
+    --bs-btn-color: #333;
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-color: #fff;
+    --bs-dropdown-bg: #333;
+    --bs-dropdown-link-hover-bg: #666;
+}

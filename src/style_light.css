@@ -1,0 +1,30 @@
+:root {
+    --text-color: #333;
+    --background-default: #fff;
+    --background-table-th: #e0e0e0;
+    --background-contrast: #f0f0f0;
+    --color-form-input: #eee;
+    --border-color: #ccc;
+    --background-button: #ADD8E6;
+    --default-font-size: 20px;
+    --delete-color: red;
+    --border-radius: 10px;
+}
+
+.bg-image {
+    background-image: url('../assets/bg-op50-white.PNG');
+}
+
+/* Bootstrap */
+
+.btn-dark {
+    --bs-btn-bg: var(--text-color);
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-hover-bg: var(--background-contrast);
+}
+
+.form-check-input {
+    border: 2px solid var(--border-color);
+}

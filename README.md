@@ -48,9 +48,9 @@ A fenti adatok tárolását az alábbi séma szemlélteti:
 
 ## Megvalósított pontot érő részletek
 
-- Az adatbázisban összetett kulcs használata: 5p
+- **Az adatbázisban összetett kulcs használata: 5p**
   - A `user_has_project` kapcsolótáblának az oszlopai összetett kulcsot alkotnak (`user_id` , `project_id`)
-- Az adatbázisban NOT NULL constraint használata (indokolható helyen): 3p
+- **Az adatbázisban NOT NULL constraint használata (indokolható helyen): 3p**
   - `user` tábla
     - `user_id` NOT NULL, mert elsődleges kulcs
     - `username` , `password` , `email` NOT NULL, mert a regisztrációhoz szükségesek
@@ -61,29 +61,29 @@ A fenti adatok tárolását az alábbi séma szemlélteti:
   - `task` tábla
     - `task_id` NOT NULL, mert elsődleges kulcs
     - `project_project_id` NOT NULL, mert külső kulcs és nem létezhet az adott task projekt nélkül
-- Az adatbázisban auto_increment használata: 2p
+- **Az adatbázisban auto_increment használata: 2p**
   - `user` tábla `user_id` oszlopa
   - `project` tábla `project_id` oszlopa
   - `task` tábla `task_id` oszlopa
-- CSS váltás (skin cserélése) az alkalmazásból: 10p
+- **CSS váltás (skin cserélése) az alkalmazásból: 10p**
   - `profile.php` oldalon lehet választani sötét és világos mód között.
-- Kiválasztott CSS (vagy egyéb, megjelenésre vonatkozó beállítás) felhasználónkénti tárolása: 5p
+- **Kiválasztott CSS (vagy egyéb, megjelenésre vonatkozó beállítás) felhasználónkénti tárolása: 5p**
   - a `user` tábla `dark_mode` oszlopa tárolja
-    - 1 - sötét mód
-    - 0 - világos mód
-- Legalább két, nem triviális reguláris kifejezés használata: 5p
+    - `1` - sötét mód
+    - `0` - világos mód
+- **Legalább két, nem triviális reguláris kifejezés használata: 5p**
   - A felhasználónevek és a jelszavak bevitelénél használok 1-1 nem triviális reguláris kifejezés.
     - felhasználónév: Csak betűket, számokat és ._ karaktereket tartalmazhat. A speciális karakterek nem követhetik egymást illetve nem lehetnek a név elején vagy végén. Hossza minimum 4, maximum 50 karakter.
     - jelszó: Kell tartalmaznia legalább 1 számot (0-9), legalább 1 nagybetűt, legalább 1 kisbetűt és legalább 6 karakter hosszú kell legyen.
-- Felhasználó kezelés jelszóval (nem plain textben tárolva): 10p
+- **Felhasználó kezelés jelszóval (nem plain textben tárolva): 10p**
   - a jelszavakat `password_hash` függvénnyel hash-elem, `PASSWORD_DEFAULT` paraméterrel
-- Kettőnél több jogosultsági kör támogatása: 5p
+- **Kettőnél több jogosultsági kör támogatása: 5p**
   - `user` tábla `access_level` oszlopa.
     - `guest`
     - `employee`
     - `project_lead`
     - `admin`
-- Esztétikus megjelenés: max. 10p
+- **Esztétikus megjelenés: max. 10p**
 
 ## Dokumentáció
 
@@ -100,13 +100,19 @@ Adatbázishoz való kapcsolódást támogató függvények
 
 Egységes lábléc
 
+![footer](assets/documentation/footer.PNG)
+
 #### index.php
 
 Ez a főoldal, ahol megjelennek a linkek az egyes aloldalakra.
 
+![főoldal](assets/documentation/index.PNG)
+
 #### login.php
 
 Bejelentkezési `form`-ot megjelenítő oldal. Sikeres bejelentkezés esetén a `$_SESSION` változókat beállítja. Az `index.php` oldalra tér vissza.
+
+![Bejelentkezési oldal](assets/documentation/login.PNG)
 
 #### logout.php
 
@@ -116,13 +122,27 @@ Törli a `$_SESSION` változókat, kijelentkezteti a felhasználót
 
 Minden oldalon meghívódik. Tartalmazza az egységes menüt, ami `5.3.0`-ás verziójú `Bootstrap navbar`-t használ. `Fontawesome` script is itt van meghívva.
 
+![egységes menü](assets/documentation/menu.PNG)
+
 #### profile.php
 
 `employee` jogosultságú felhasználó esetén kiírja az elvégzett projektet és feladatok számát. Tartalmaz egy felhasználónév megváltozatására szolgáló `form`-ot. Tartalmaz egy jelszóváltoztatáshoz szükséges `form`-ot. Az oldal alján található egy `felhasználó törlése` gomb.
 
+![profil](assets/documentation/profile.PNG)
+
+Ha `employee` jogosultságú felhasználó van bejelentkezve:
+
+![profil employee](assets/documentation/profile_employee.PNG)
+
 #### projects_admin.php
 
 Táblázatban kilistázza az összes projektet és a hozzájuk tartozó felhasználókat. A projektekhez hozzá lehet rendelni a felhasználókat. Módosítani és törölni is lehet a projekteket a `projects_edit_admin.php`-ra és a `projects_delete.php`-ra mutató linkekkel.
+
+![projects_admin_1](assets/documentation/projekt_1.PNG)
+
+![project_admin_2](assets/documentation/projekt_2.PNG)
+
+![project_admin_3](assets/documentation/projekt_3.PNG)
 
 #### projects_delete.php
 
@@ -140,6 +160,8 @@ Táblázatban kilistázza az összes projektet és a hozzájuk tartozó felhaszn
 
 Megjeleníti az `employee` jogosultságú felhasználóhoz rendelt projekteket, azokat le tudja adni a `Lead` gomb segítségével ami továbbít a `projects_helper.php` oldalra.
 
+![projects_employee](assets/documentation/projekt_employee.PNG)
+
 #### projects_helper.php
 
 `GET paraméterként` kap `action` változót és `project` IDt. Ha a `action == 'finished'` akkor a megfelelő projekt státuszát `finished`-re állítja. A `projects.php` oldalra tér vissza.
@@ -147,6 +169,10 @@ Megjeleníti az `employee` jogosultságú felhasználóhoz rendelt projekteket, 
 #### projects_lead.php
 
 Megjelenít egy `form`-ot, ahol új projektet lehet létrehozni. Kiírja táblázatban a `not_started` státuszú projekteket. Ezeket `Kiosztás` gomb segítségével hozzá lehet rendelni alkalmazottakhoz. A `Kiosztás` gomb a `projects_helper.php` oldalra továbbít. Kiírja továbbá az `in_progress` és a `finished` projekteket. A `finished` projekteket leszámítva lehet módosítani az összes projektet. A projektek mellett van a `Feladatok` gomb, ami a `projects_task.php` oldalra továbbít.
+
+![projects_lead_1](assets/documentation/projekt_1_lead.PNG)
+
+![project_lead_2](assets/documentation/projekt_2_lead.PNG)
 
 #### projects_task_delete.php
 
@@ -172,6 +198,8 @@ Ha a hozzáférési szint:
 
 Regisztrációs `form`-ot megjelenítő oldal. Az `index.php` oldalra tér vissza.
 
+![register](assets/documentation/register.PNG)
+
 #### users_delete.php
 
 `GET paraméterként` megkapja annak a felhasználónak a `user-id`-jét, akit törölni szeretnénk. A felhasználóhoz kapcsolt projekteket `not_started` állapotba kell állítani. Ha projekt vezetőt törlünk. A `users.php` oldalra tér vissza.
@@ -184,6 +212,12 @@ Megjelenít egy `form`-ot, ahol meglévő felhasználók adatait lehet módosít
 
 Új felhasználót lehet létrehozni egy `form`-on keresztül. A következő adatokat szükséges megadni: felhasználónév, email, ID, jelszó, sötét mód,hozzáférési szint. Az ID megadása nem kötelező az `AUTO_INCREMENT` miatt. A sötét módnak és a hozzáférési szintnek is van `default value`-ja, ezért ezek megadása sem kötelező.
 
+![users](assets/documentation/felhasznalok_uj.PNG)
+
 #### users.php
 
 Lehetőség van a `user` táblában keresni. Ezen felül kiír minden adatot a `user` táblából, illetve van egy link a `user_insert` oldalra.
+
+![users](assets/documentation/felhasznalok_1.PNG)
+
+![users](assets/documentation/felhasznalok_2.PNG)

@@ -1,31 +1,31 @@
 <?php
-@include 'connection.php';
-$link = connectDB();
+// ? funkcionális elvárás: A felhasználó által beírt bemenetet ellenőrizni kell mielőtt adatbázisba írjuk. SQL injection elleni védelmet biztosítani kell.
 if (isset($_POST['submit'])) {
+    @include 'connection.php';
+    $link = connectDB();
     $username = mysqli_real_escape_string($link, $_POST['username']);
     $email = mysqli_real_escape_string($link, $_POST['email']);
+    // ? Pontozási szempontok: Felhasználó kezelés jelszóval (nem plain textben tárolva): 10p
     $hashed_password = password_hash(mysqli_real_escape_string($link, $_POST['password']), PASSWORD_DEFAULT);
-
-    // todo? email verificaion password verification
     $query_email = "SELECT * FROM user WHERE email = '$email'";
     $result_email = mysqli_query($link, $query_email);
-    $query_username = "SELECT * FROM user WHERE email = '$username'";
+    $query_username = "SELECT * FROM user WHERE username = '$username'";
     $result_username = mysqli_query($link, $query_username);
 
+    // ? funckionális elvárás: Legalább két, nem triviális reguláris kifejezés használata: 5p
     // Kell tartalmaznia >1 számot (0-9), >1 nagybetut, >1 kisbetut és >6 karakter hosszú
-    $password_regex = '/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/';
+    $password_regex = '/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})$/';
 
     // csak betuket, szamokat és ._ karaktereket tartalmazhat. A speciális karakterek nem kovethetik egymást illetve nem lehetnek a string elején vagy végén
     // azért 50 a maximális hossz, mert ennyi fér el az adatbázisban
-    $username_regex = '/^(?=[a-zA-Z0-9._]{4,50}$)(?!.*[_.]{2})[^_.].*[^_.]$/';
-
-
+    $username_regex = '/^(?=[a-zA-Z0-9ÁÉÍÓÖŐÚÜŰáéíóöőúüű._]{4,50}$)(?!.*[_.]{2})[^_.].*[^_.]$/';
+    // hibakezelés
     if (mysqli_num_rows($result_email) > 0) {
-        $error[] = 'Az email már használatban van';
+        $error[] = 'Ez az email cím már használatban van.';
     } else if (mysqli_num_rows($result_username) > 0) {
-        $error[] = 'A felhasználónév már használatban van';
+        $error[] = 'Ez a felhasználónév már foglalt. Adjon meg másikat.';
     } else if (mysqli_real_escape_string($link, $_POST['password']) != mysqli_real_escape_string($link, $_POST['cpassword'])) {
-        $error[] = 'A jelszavak nem egyeztek meg';
+        $error[] = 'A jelszavak nem egyeznek. Próbálja újra.';
     } else if (!preg_match($password_regex, mysqli_real_escape_string($link, $_POST['password']))) {
         $regex_error[] = 'A jelszónak tartalmaznia kell legalább 6 karakter, kisbetűt, nagybetűt és számot!';
     } else if (!preg_match($username_regex, mysqli_real_escape_string($link, $_POST['username']))) {
@@ -33,65 +33,44 @@ if (isset($_POST['submit'])) {
     } else {
         $insert = "INSERT INTO user (username,password,email) VALUES('$username','$hashed_password','$email')";
         mysqli_query($link, $insert);
+        closeDB($link);
         header('Location: index.php');
         exit;
     }
+    closeDB($link);
 }
-?>
-
-<!doctype HTML>
-<html lang="hu">
-
-<head>
-    <title>Register form</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-        rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-        crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/59746e632a.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="../assets/icon.ico">
-
-</head>
-
-<body class="bg-image">
-    <?php $on_login_page = true;
-    include 'menu.php' ?>
-    <div class="form-container">
-
-        <form action="" method="post">
-            <h3>Regisztrálj most!</h3>
-            <?php
-            if (isset($error)) {
-                foreach ($error as $error) {
-                    echo '<span class="error-msg">' . $error . '</span>';
-                }
-                ;
+$on_login_page = true; // ez a változó jelzi a menu-nek, hogy ne írja ki a bejelnetkezést a jobb felso sarokba
+include 'menu.php' ?>
+<div class="form-container">
+    <form action="" method="post">
+        <!-- // ? funkcionális elvárás: Az adatmódosításkor, felvitelnél figyelni kell a hibás értékek kiszűrésére, -->
+        <!-- // ? például üresen hagyott mezők, értelmetlen értékek (szöveg beírása szám helyett stb.). Ezeket jelezni kell a -->
+        <!-- // ? felhasználónak. -->
+        <h3>Regisztrálj most!</h3>
+        <?php
+        if (isset($error)) {
+            foreach ($error as $error) {
+                echo '<span class="message error">' . $error . '</span>';
             }
-            ;
-            ?>
-            <?php
-            if (isset($regex_error)) {
-                foreach ($regex_error as $regex_error) {
-                    echo '<span class="regex-msg">' . $regex_error . '</span>';
-                }
-                ;
+        }
+        ?>
+        <?php
+        if (isset($regex_error)) {
+            foreach ($regex_error as $regex_error) {
+                echo '<span class="message regex-error">' . $regex_error . '</span>';
             }
-            ;
-            ?>
-            <input type="text" name="username" required placeholder="Felhasználónév">
-            <input type="email" name="email" required placeholder="Email cím">
-            <input type="password" name="password" required placeholder="Jelszó">
-            <input type="password" name="cpassword" required placeholder="Jelszó még egyszer">
-            <input type="submit" name="submit" value="Regisztráció" class="form-btn">
-            <p>Van már felhasználód? <a href="login.php">Jelentkezz be!</a></p>
-
-        </form>
-
-    </div>
-    <?php include 'footer.php'; ?>
-</body>
-
-</html>
+        }
+        ?>
+        <label for="username">Felhasználónév:</label>
+        <input class="form-control" type="text" name="username" required>
+        <label for="email">Email cím:</label>
+        <input class="form-control" type="email" name="email" required>
+        <label for="password">Jelszó:</label>
+        <input class="form-control" type="password" name="password" required>
+        <label for="cpassword">Jelszó megerősítés:</label>
+        <input class="form-control" type="password" name="cpassword" required>
+        <input type="submit" name="submit" value="Regisztráció" class="form-btn">
+        <p>Van már felhasználód? <a href="login.php">Jelentkezz be!</a></p>
+    </form>
+</div>
+<?php include 'footer.php'; ?>

@@ -1,0 +1,165 @@
+<?php if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] != true) {
+    header('Location: index.php');
+    exit;
+}
+
+if (!(isset($_GET['user_id_get']) && isset($_GET['email_get']) && isset($_GET['username_get']) && isset($_GET['dark_mode_get']) && isset($_GET['access_level_get']))) {
+    header("Location: users.php");
+    exit;
+}
+
+@include 'connection.php';
+$link = connectDB();
+
+// ? funkcionális elvárás: A felhasználó által beírt bemenetet ellenőrizni kell mielőtt adatbázisba írjuk. SQL injection elleni védelmet biztosítani kell.
+if (isset($_POST['submit_edit'])) {
+    $edited_query = "UPDATE user SET";
+    // ezek a változók jelzik, hogy melyik $_SESSION változót kell felulírni
+    $not_empty = $edit_username = $edit_email = $edit_id = $edit_dark_mode = $edit_access_level = false;
+    $user_id_get = mysqli_real_escape_string($link, $_GET['user_id_get']);
+    // isset(x) && trim(x) !== "" biztosan megmondja hogy uresen van-e hagyva az adott form input
+    if (isset($_POST['edited_username']) && trim($_POST['edited_username']) !== "") {
+        $edited_username = mysqli_real_escape_string($link, $_POST['edited_username']);
+        $query_username_already_used = "SELECT * FROM user WHERE username = '$edited_username'";
+        $result_username_already_used = mysqli_query($link, $query_username_already_used);
+        if (mysqli_num_rows($result_username_already_used) > 0) {
+            $already_in_use_error[] = 'A felhasználónév már foglalt';
+        }
+        $edited_query .= " username = '$edited_username',";
+        $not_empty = true;
+        $edit_username = true;
+    }
+
+    if (isset($_POST['edited_email']) && trim($_POST['edited_email']) !== "") {
+        $edited_email = mysqli_real_escape_string($link, $_POST['edited_email']);
+        $query_email_already_used = "SELECT * FROM user WHERE email = '$edited_email'";
+        $result_email_already_used = mysqli_query($link, $query_email_already_used);
+        if (mysqli_num_rows($result_email_already_used) > 0) {
+            $already_in_use_error[] = 'Az email cím már foglalt';
+        }
+        $edited_query .= " email = '$edited_email',";
+        $not_empty = true;
+        $edit_email = true;
+    }
+
+    if (isset($_POST['edited_user_id']) && trim($_POST['edited_user_id']) !== "") {
+        $edited_user_id = mysqli_real_escape_string($link, $_POST['edited_user_id']);
+        $query_user_id_already_used = "SELECT * FROM user WHERE user_id = '$edited_user_id'";
+        $result_user_id_already_used = mysqli_query($link, $query_user_id_already_used);
+        if (mysqli_num_rows($result_user_id_already_used) > 0) {
+            $already_in_use_error[] = 'Az ID már foglalt';
+        }
+        $edited_query .= " user_id = '$edited_user_id',";
+        $not_empty = true;
+        $edit_id = true;
+    }
+    // ? Pontozási szempontok: CSS váltás (skin cserélése) az alkalmazásból: 10p
+    // ? Pontozási szempontok: Kiválasztott CSS (vagy egyéb, megjelenésre vonatkozó beállítás) felhasználónkénti tárolása: 5p
+    if (isset($_POST['edited_dark_mode_select']) && trim($_POST['edited_dark_mode_select']) !== "") {
+        $edited_dark_mode = mysqli_real_escape_string($link, $_POST['edited_dark_mode_select']);
+        $edited_query .= " dark_mode = b'$edited_dark_mode',";
+        $not_empty = true;
+        $edit_dark_mode = true;
+    }
+    // ? Pontozási szempontok: Kettőnél több jogosultsági kör támogatása: 5p
+    if (isset($_POST['edited_access_level_select']) && trim($_POST['edited_access_level_select']) !== "") {
+        $edited_access_level = mysqli_real_escape_string($link, $_POST['edited_access_level_select']);
+        $edited_query .= " access_level = '$edited_access_level',";
+        $not_empty = true;
+        $edit_access_level = true;
+    }
+    if ($not_empty) {
+        $edited_query[-1] = " ";
+    }
+    $edited_query .= " WHERE user_id = '$user_id_get'";
+
+    if (!isset($already_in_use_error)) {
+        mysqli_query($link, $edited_query);
+        if ($_SESSION['id'] == $_GET['user_id_get']) {
+            // Ha a jelenleg bejelentkezett user módosít saját magán, akkor felul kell írni a $_SESSION változókat
+            if ($edit_username) {
+                $_SESSION['username'] = $edited_username;
+            }
+            if ($edit_email) {
+                $_SESSION['email'] = $edited_email;
+            }
+            if ($edit_id) {
+                $_SESSION['id'] = $edited_user_id;
+            }
+            if ($edit_access_level) {
+                $_SESSION['access_level'] = $edited_access_level;
+            }
+            if ($edit_dark_mode) {
+                $_SESSION['dark_mode'] = $edited_dark_mode;
+            }
+        }
+        header('Location: users.php');
+    }
+}
+closeDB($link);
+?>
+<?php include 'menu.php' ?>
+<div class="form-container">
+    <form action="" method="post">
+        <!-- // ? funkcionális elvárás: Az adatmódosításkor, felvitelnél figyelni kell a hibás értékek kiszűrésére, -->
+        <!-- // ? például üresen hagyott mezők, értelmetlen értékek (szöveg beírása szám helyett stb.). Ezeket jelezni kell a -->
+        <!-- // ? felhasználónak. -->
+        <h4>Felhasználói adatok módosítása</h4>
+        <label for="edited_user_id">ID: </label>
+        <input type="number" name="edited_user_id" class="form-control" placeholder="<?= $_GET['user_id_get'] ?>">
+
+        <label for="edited_email">Email: </label>
+        <input type="email" name="edited_email" class="form-control" placeholder="<?= $_GET['email_get'] ?>">
+
+        <label for="edited_username">Felhasználónév: </label>
+        <input type="text" name="edited_username" class="form-control" placeholder="<?= $_GET['username_get'] ?>">
+
+        <?php
+        $access = array("admin" => "Admin", "project_lead" => "Projektvezető", "employee" => "Alkalmazott", "guest" => "Vendég");
+        ?>
+        <label for="edited_access_level_select">Hozzáférési szint: </label>
+        <select name="edited_access_level_select" class="form-select">
+            <option value="<?= $_GET['access_level_get'] ?>" selected>
+                <?php
+                $key = $_GET['access_level_get'];
+                echo $access[$key];
+                ?>
+            </option>
+            <?php
+            foreach ($access as $key => $value) {
+                if ($key != $_GET['access_level_get']) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+            }
+            ?>
+        </select>
+
+        <!-- // ? Pontozási szempontok: CSS váltás (skin cserélése) az alkalmazásból: 10p -->
+        <!-- // ? Pontozási szempontok: Kiválasztott CSS (vagy egyéb, megjelenésre vonatkozó beállítás) felhasználónkénti tárolása: 5p -->
+        <label for="edited_dark_mode_select">Mód: </label>
+        <select name="edited_dark_mode_select" class="form-select">
+            <?php
+            if ($_GET['dark_mode_get'] == '1') {
+                echo '<option value="1">Sötét mód</option>
+                        <option value="0">Világos mód</option>';
+            } else {
+                echo '<option value="0">Világos mód</option>
+                        <option value="1">Sötét mód</option>';
+            }
+            ?>
+        </select>
+        <input type="submit" name="submit_edit" value="Adatok módosítása" class="form-btn">
+        <?php
+        if (isset($already_in_use_error)) {
+            foreach ($already_in_use_error as $already_in_use_error) {
+                echo '<span class="message error">' . $already_in_use_error . '</span>';
+            }
+        }
+        ?>
+    </form>
+</div>
+<?php include 'footer.php' ?>

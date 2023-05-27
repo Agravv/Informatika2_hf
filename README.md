@@ -3,7 +3,7 @@ Informatika 2 - VIAUAB01 - házi feladat
 
 Név: Varga Csaba    
 Neptun-kód: K04JA8  
-A bemutató videó URL-je:
+A bemutató videó URL-je: https://www.youtube.com/watch?v=CAkkHLS_JkU
 
 # Specifikáció
 
@@ -41,3 +41,29 @@ Ezeket a táblákat a **user_has_project** kapcsolótábla kapcsolja össze.
 
 A fenti adatok tárolását az alábbi séma szemlélteti:
 ![database screenshot](assets/db.PNG)
+
+# Dokumentáció
+## Fájlok
+- `connection.php`
+- `footer.php`
+- `index.php`
+- `login.php`
+- `logout.php`
+- `menu.php`
+- `profile.php`
+- `projects_admin.php`
+- `projects_delete.php`
+- `projects_edit_admin.php`
+- `projects_edit.php`
+- `projects_employee.php`
+- `projects_helper.php`
+- `projects_lead.php`
+- `projects_task_delete.php`
+- `projects_task_edit.php`
+- `projects_task.php`
+- `projects.php`
+- `register.php`
+- `users_delete.php`
+- `users_edit.php`
+- `users_insert.php`
+- `users.php`
